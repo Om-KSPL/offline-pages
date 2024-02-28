@@ -33,65 +33,65 @@ document.getElementById('offlineForm').addEventListener('submit', function(event
 
 
 // Function to save data locally
-function saveDataLocally(data) {
-    if (!('indexedDB' in self)) {
-        console.error('IndexedDB is not supported.');
-        return;
-    }
-
-    const request = indexedDB.open('offlineFormDataDB', 1);
-
-    request.onerror = function(event) {
-        console.error('Database error:', event.target.error);
-    };
-
-    request.onsuccess = function(event) {
-        const db = event.target.result;
-        const transaction = db.transaction('formData', 'readwrite');
-        const objectStore = transaction.objectStore('formData');
-
-        const addRequest = objectStore.add(data);
-        
-        addRequest.onsuccess = function(event) {
-            console.log('Data added locally.');
-        };
-
-        addRequest.onerror = function(event) {
-            console.error('Error adding data:', event.target.error);
-        };
-
-        // Check if navigator is online, if yes, register sync
-        // if (navigator.onLine) {
-        //     registerSync();
-        // }
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.controller.postMessage('syncFormData');
-        }
-    };
-
-    request.onupgradeneeded = function(event) {
-        const db = event.target.result;
-        const objectStore = db.createObjectStore('formData', { keyPath: 'id', autoIncrement: true });
-    };
-}
-
-
-// // Function to save data locally
 // function saveDataLocally(data) {
-//     // Check if browser supports local storage
-//     if (typeof(Storage) !== 'undefined') {
-//         let savedData = JSON.parse(localStorage.getItem('offlineFormData')) || [];
-//         savedData.push(data);
-//         localStorage.setItem('offlineFormData', JSON.stringify(savedData));
+//     if (!('indexedDB' in self)) {
+//         console.error('IndexedDB is not supported.');
+//         return;
+//     }
+
+//     const request = indexedDB.open('offlineFormDataDB', 1);
+
+//     request.onerror = function(event) {
+//         console.error('Database error:', event.target.error);
+//     };
+
+//     request.onsuccess = function(event) {
+//         const db = event.target.result;
+//         const transaction = db.transaction('formData', 'readwrite');
+//         const objectStore = transaction.objectStore('formData');
+
+//         const addRequest = objectStore.add(data);
         
+//         addRequest.onsuccess = function(event) {
+//             console.log('Data added locally.');
+//         };
+
+//         addRequest.onerror = function(event) {
+//             console.error('Error adding data:', event.target.error);
+//         };
+
 //         // Check if navigator is online, if yes, register sync
 //         if (navigator.onLine) {
 //             registerSync();
 //         }
-//     } else {
-//         console.error('Local storage is not supported.');
-//     }
+//         if ('serviceWorker' in navigator) {
+//             navigator.serviceWorker.controller.postMessage('syncFormData');
+//         }
+//     };
+
+//     request.onupgradeneeded = function(event) {
+//         const db = event.target.result;
+//         const objectStore = db.createObjectStore('formData', { keyPath: 'id', autoIncrement: true });
+//     };
 // }
+
+
+// Function to save data locally
+function saveDataLocally(data) {
+    // Check if browser supports local storage
+    if (typeof(Storage) !== 'undefined') {
+        let savedData = JSON.parse(localStorage.getItem('offlineFormData')) || [];
+        savedData.push(data);
+        localStorage.setItem('offlineFormData', JSON.stringify(savedData));
+        
+        // Check if navigator is online, if yes, register sync
+        if (navigator.onLine) {
+            registerSync();
+        }
+    } else {
+        console.error('Local storage is not supported.');
+    }
+}
 
 // Register sync event
 function registerSync() {
