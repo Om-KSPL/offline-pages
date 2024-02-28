@@ -35,8 +35,8 @@ self.addEventListener('fetch', function(event) {
 });
 
 // Sync event
-// self.addEventListener('sync', function(event) {
-self.addEventListener('message', function(event) {
+self.addEventListener('sync', function(event) {
+// self.addEventListener('message', function(event) {
     console.log("sync");
     if (event.tag === 'syncFormData') {
         event.waitUntil(syncFormData());
