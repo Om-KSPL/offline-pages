@@ -3,9 +3,9 @@ const CACHE_NAME = 'offline-form-cache-v1';
 
 // Files to cache
 const urlsToCache = [
-    '/',
-    '/index.html',
-    '/js/index.js'
+    '/offline-pages/',
+    '/offline-pages/index.html',
+    '/offline-pages/js/index.js'
 ];
 
 // Install service worker
